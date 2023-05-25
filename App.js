@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './src/Components/styles/styles';
 // Views
-import Login from './src/Views/Login';
+// import Login from './src/Views/Login';
 import Inicial from './src/Views/Inicial';
 import Esquecisenha from './src/Views/Esquecisenha';
 import Token from './src/Views/Token';
@@ -29,10 +29,10 @@ return (
 function MyStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen 
+      {/* <Stack.Screen 
         name="Login" 
           component={Login} 
-            options={{ headerShown: false }}/>
+            options={{ headerShown: false }}/> */}
 
       <Stack.Screen 
         name="Inicial" 

@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 import React from 'react';
-
+import styles from '../Components/styles/Inicial/styles';
 
 function Inicial({ navigation }) {
 
@@ -8,7 +8,7 @@ function Inicial({ navigation }) {
     return(
 
       <View>
-        <Text>Oi</Text>
+
       </View>
 
       

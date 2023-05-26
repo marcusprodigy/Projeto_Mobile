@@ -11,10 +11,12 @@ const styles = StyleSheet.create({
 
     },
 
+    
+
     containerh:{
         width:'100%',
         height:'5%',
-        backgroundColor:'#559DED',
+        backgroundColor:'#01CCAA',
 
 
     },
@@ -31,7 +33,7 @@ const styles = StyleSheet.create({
     containerf:{
         width:'100%',
         height:'5%',
-        backgroundColor:'#559DED',
+        backgroundColor:'#01CCAA',
         
     },
 
@@ -42,7 +44,7 @@ const styles = StyleSheet.create({
     textnome:{
 
         marginLeft:4,
-        color:'#559DED',
+        color:'#01CCAA',
         fontWeight:'bold',
     },
     containerbotao:{
@@ -57,11 +59,11 @@ const styles = StyleSheet.create({
     },
 
     botaotela:{
-        width:170,
-        height:170,
+        width:150,
+        height:150,
         
         borderRadius:30,
-        backgroundColor:'#559DED',
+        backgroundColor:'#01CCAA',
         justifyContent:'center',
 
         
@@ -72,6 +74,7 @@ const styles = StyleSheet.create({
         fontSize:20,
         fontWeight:'bold',
         color:'#FFF',
+        textAlign:'center',
 
     },
 
@@ -85,7 +88,7 @@ const styles = StyleSheet.create({
         height:80,
         
         borderRadius:30,
-        backgroundColor:'#559DED',
+        backgroundColor:'#01CCAA',
         justifyContent:'center',
 
 

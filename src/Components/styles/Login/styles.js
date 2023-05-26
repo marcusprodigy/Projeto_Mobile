@@ -16,10 +16,10 @@ const styles = StyleSheet.create({
             
         },
         Caixabola:{
-            marginBottom:60,
+            marginBottom:30,
             alignSelf:'center',
-            width:200,
-            height:200,
+            width:170,
+            height:170,
             alignItems:'center',
             justifyContent:'center',
             backgroundColor:'#fff',
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
             paddingBottom:50,
 
             width:'100%',
-            height:'65%',
+            height:'70%',
             backgroundColor:'#FFF',
 
             shadowColor: '#000',
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
             width:'70%',
             height: 55,
 
-            marginTop:'2%',
+            marginTop:'10%',
 
             borderRadius:30,
 
@@ -108,26 +108,30 @@ const styles = StyleSheet.create({
 
             backgroundColor:'#01CCAA',
 
+            justifyContent:'center',
+
 
         },
         
         txtbutt:{
+            textAlign:"center",
             color:'#fff',
             fontSize:35,
         },
 
         buttoken:{
-            textAlign:'center',
             alignSelf:'center',
             backgroundColor:'#01CCAA',
             width:'100%',
-            height:50,
+            height:100,
 
         },
         txtbuttoken:{
             marginTop:12,
-            fontSize:'100%',
+            fontSize:15,
             color:'#fff',
+            
+            textAlign:'center',
 
         },
 

@@ -15,10 +15,11 @@ function Inicial({ navigation }) {
           <View style={styles.containertext}><Text>Olá,</Text><Text style={styles.textnome}>Marcus Vinicius Lins Lemos Filho</Text></View>
           <View style={styles.containerquadros}>
             <View style={styles.containerbotao}>
-              <TouchableOpacity style={styles.botaotela}><Text style={styles.Textbotao}> Cadastrar</Text><Text style={styles.Textbotao}>Cliente</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.botaotela} onPress={() => navigation.navigate('CadastroCli')}><Text style={styles.Textbotao}> Cadastrar</Text><Text style={styles.Textbotao}>Cliente</Text></TouchableOpacity>
               <TouchableOpacity style={styles.botaotela}><Text style={styles.Textbotao}>Marcar</Text><Text style={styles.Textbotao}>Consulta</Text></TouchableOpacity>
             </View>
             
+        
         
             <View style={styles.containerbotao}>
               <TouchableOpacity style={styles.botaotela}><Text style={styles.Textbotao}>Consultas</Text><Text style={styles.Textbotao}>Marcadas</Text></TouchableOpacity>

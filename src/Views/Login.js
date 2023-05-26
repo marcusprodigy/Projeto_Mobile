@@ -2,6 +2,7 @@ import { Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
 import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient'; // ou import LinearGradient from 'react-native-linear-gradient';
 import styles from '../Components/styles/Login/styles';
+import JanelaAviso from '../Components/Script/JanelaAviso';
 
 
 
@@ -10,7 +11,7 @@ function Login({ navigation }) {
 
     return(
         <LinearGradient
-        colors={['#559DED','#48EAF7', '#559DED']} // Defina as cores do gradiente
+        colors={['#01CCAA','#48EAF7', '#01CCaa']} // Defina as cores do gradiente
         start={{ x: 1, y: 1 }} // Posição inicial do gradiente
         end={{ x: 1, y: 1 }} // Posição final do gradiente
         style={styles.bg}
@@ -32,10 +33,6 @@ function Login({ navigation }) {
                             <Text style={styles.nome}>Senha</Text> 
                             <TextInput style={styles.inp} secureTextEntry={true}></TextInput>
                             <View style={styles.containertxt}>
-                                <Text>Esqueci a </Text>
-                                <TouchableOpacity style={styles.senhabutt}>
-                                    <Text style={styles.txtsenha} onPress={() => navigation.navigate('Esquecisenha')}>Senha</Text>
-                                </TouchableOpacity>
                             </View>
                         </View>
 
@@ -49,11 +46,7 @@ function Login({ navigation }) {
 
                        
                     </View>
-
-                    <TouchableOpacity style={styles.buttoken} onPress={() => navigation.navigate('Token')}>
-                                <Text style={styles.txtbuttoken}>Tenho o token de acesso</Text>
-                    </TouchableOpacity>
-                     
+                    <JanelaAviso/>
                 </View>
 
         </LinearGradient>

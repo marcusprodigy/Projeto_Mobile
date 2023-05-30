@@ -1,58 +1,100 @@
-import { Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, Image, SafeAreaView, StyleSheet } from 'react-native';
 import React from 'react';
-import { LinearGradient } from 'expo-linear-gradient'; // ou import LinearGradient from 'react-native-linear-gradient';
-import styles from '../Components/styles/Login/styles';
-import JanelaAviso from '../Components/Script/JanelaAviso';
-
 
 
 function Login({ navigation }) {
 
-
+    const logo = require('../../assets/logo.png')
     return(
-        <LinearGradient
-        colors={['#01CCAA','#48EAF7', '#01CCaa']} // Defina as cores do gradiente
-        start={{ x: 1, y: 1 }} // Posição inicial do gradiente
-        end={{ x: 1, y: 1 }} // Posição final do gradiente
-        style={styles.bg}
-        >   
-                
-                <View style={styles.Caixabola}>
-                    <Image
-                        source={require('../../assets/logo.png')}// Substitua pelo caminho correto com o nome do arquivo e extensão
-                        style={{ width: 200, height: 200 }}
-                    />
-                </View>
-                <View style={styles.CaixaLogin}>
-                    <View style={styles.caixa}>
-                        <View style={styles.Login}>
-                            <Text style={styles.nome}>Nome</Text>
-                            <TextInput style={styles.inp}></TextInput>
-                        </View>
-                        <View style={styles.Login}>
-                            <Text style={styles.nome}>Senha</Text> 
-                            <TextInput style={styles.inp} secureTextEntry={true}></TextInput>
-                            <View style={styles.containertxt}>
-                            </View>
-                        </View>
+        
+        <SafeAreaView style ={styles.container}>
 
-                        <View style={styles.Login}>
-                            <TouchableOpacity style={styles.butt} onPress={() => navigation.navigate('Inicial')}>
-                                <Text style={styles.txtbutt}>Login</Text>
-                            </TouchableOpacity>
+            <View style ={styles.container1}></View>
+            <View style ={styles.container2}>
+
+                <Image source={logo} style ={styles.logo} />
+
+                <TextInput style ={styles.input} placeholder='CPF' placeholderTextColor='gray'></TextInput>
+                <TextInput style ={styles.input} placeholder='SENHA' placeholderTextColor='gray' secureTextEntry={true}></TextInput>
 
 
-                        </View>
+                <TouchableOpacity style ={styles.bott}>
+                    <Text style ={styles.txt}>LOGIN</Text>
+                </TouchableOpacity>
+            </View>
+            <View style ={styles.container3}></View>
 
-                       
-                    </View>
-                    <JanelaAviso/>
-                </View>
 
-        </LinearGradient>
+        </SafeAreaView>
+               
+
 
       )
   
   }
+  
+  const styles = StyleSheet.create({
+    logo:{
+        width:300,
+        height:250,
+        alignSelf:'center',
+    },
+    container: {
+      flex: 1,
+      backgroundColor:'#fff'
+      // Defina os estilos desejados para o container aqui
+    },
 
+    container1:{
+        backgroundColor:'#000',
+        width:'100%',
+        height:'7%',
+
+
+    },
+    container2:{
+        width:'100%',
+        height:'86%',
+
+
+    },
+    container3:{
+        backgroundColor:'#000',
+        width:'100%',
+        height:'7%',
+
+
+    },
+
+    input:{
+        marginTop:50,
+        alignSelf:'center',
+        width:'70%',
+        height:55,
+        borderRadius:10,
+        borderWidth:1,
+        paddingRight:15,
+        fontSize:20,
+        textAlign:'center',
+        fontStyle:'italic',
+
+
+    },
+    bott:{
+        alignSelf:'center',
+        
+        alignItems:'center',
+        justifyContent:'center',
+        backgroundColor:'#000',
+        width:'40%',
+        height:65,
+        borderRadius:50,
+
+
+    },
+    txt:{
+        color:'#FFF',
+    },
+  
+  });
   export default Login;

@@ -1,10 +1,9 @@
-import { Text, View, TextInput, TouchableOpacity, Image, SafeAreaView, StyleSheet } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, SafeAreaView, StyleSheet } from 'react-native';
 import React from 'react';
 
 
-function Login({ navigation }) {
+function Cadastrar({ navigation }) {
 
-    const logo = require('../../assets/logo.png')
     return(
         
         <SafeAreaView style ={styles.container}>
@@ -12,14 +11,16 @@ function Login({ navigation }) {
             <View style ={styles.container1}></View>
             <View style ={styles.container2}>
 
-                <Image source={logo} style ={styles.logo} />
-
-                <TextInput style ={styles.input} placeholder='CPF' placeholderTextColor='gray'></TextInput>
-                <TextInput style ={styles.input} placeholder='SENHA' placeholderTextColor='gray' secureTextEntry={true}></TextInput>
-
+                <TextInput style ={styles.input} placeholder='Nome Completo' placeholderTextColor='gray'/>
+                <TextInput style ={styles.input} placeholder='CPF' placeholderTextColor='gray'/>
+                <TextInput style ={styles.input} placeholder='Data de Nascimento' placeholderTextColor='gray'/>
+                <TextInput style ={styles.input} placeholder='Endereço' placeholderTextColor='gray'/>
+                <TextInput style ={styles.input} placeholder='Numero' placeholderTextColor='gray'/>
+                <TextInput style ={styles.input} placeholder='Bairro' placeholderTextColor='gray'/>
+                <TextInput style ={styles.input} placeholder='Telefone' placeholderTextColor='gray'/>
 
                 <TouchableOpacity style ={styles.bott}>
-                    <Text style ={styles.txt}>LOGIN</Text>
+                    <Text style ={styles.txt}>ENVIAR</Text>
                 </TouchableOpacity>
             </View>
             <View style ={styles.container3}></View>
@@ -55,6 +56,7 @@ function Login({ navigation }) {
     container2:{
         width:'100%',
         height:'86%',
+        paddingTop:20,
 
 
     },
@@ -67,15 +69,15 @@ function Login({ navigation }) {
     },
 
     input:{
-        marginTop:50,
+        marginTop:20,
         alignSelf:'center',
         width:'80%',
         height:55,
         borderRadius:10,
         borderWidth:1,
-        paddingRight:15,
+        paddingLeft:25,
+        paddingRight:25,
         fontSize:20,
-        textAlign:'center',
         fontStyle:'italic',
 
 
@@ -89,7 +91,7 @@ function Login({ navigation }) {
         width:'40%',
         height:65,
         borderRadius:50,
-        marginTop:100,
+        marginTop:80,
 
     },
     txt:{
@@ -97,4 +99,4 @@ function Login({ navigation }) {
     },
   
   });
-  export default Login;
+  export default Cadastrar;

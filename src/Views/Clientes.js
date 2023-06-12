@@ -1,97 +1,80 @@
-import { Text, View, ScrollView, TouchableOpacity, SafeAreaView, StyleSheet } from 'react-native';
+import { View, ScrollView, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
 import Cardclientes from '../Components/Home/Cardclientes';
-import React from 'react';
-
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Clientes({ navigation }) {
+  const [clientes, setClientes] = useState([]);
 
-    return(
-        
-        <SafeAreaView style ={styles.container}>
+  useEffect(() => {
+    carregarClientes();
+  }, []);
 
-            <View style ={styles.container1}></View>
-            <ScrollView style ={styles.container2}>
-
-                <Cardclientes Nome="Marcus Vinicius Lins Lemos Filho" CPF="808.090.142-20" Date="31/05/1999"/>
-                <Cardclientes Nome="Marcus Vinicius Lins Lemos Filho" CPF="808.090.142-20" Date="31/05/1999"/>
-                <Cardclientes Nome="Marcus Vinicius Lins Lemos Filho" CPF="808.090.142-20" Date="31/05/1999"/>
-                <Cardclientes Nome="Marcus Vinicius Lins Lemos Filho" CPF="808.090.142-20" Date="31/05/1999"/>
-                <Cardclientes Nome="Marcus Vinicius Lins Lemos Filho" CPF="808.090.142-20" Date="31/05/1999"/>
-                
-             
-            </ScrollView>
-            <View style ={styles.container3}></View>
-
-
-        </SafeAreaView>
-               
-
-
-      )
+  const carregarClientes = async () => {
+    try {
+      const dadosClientes = await AsyncStorage.getItem('Clientes');
+      console.log('Dados do AsyncStorage:', dadosClientes); // Verifique os dados retornados
   
-  }
-  
-  const styles = StyleSheet.create({
-    logo:{
-        width:300,
-        height:250,
-        alignSelf:'center',
-    },
-    container: {
-      flex: 1,
-      backgroundColor:'#fff'
-      // Defina os estilos desejados para o container aqui
-    },
+      if (dadosClientes !== null) {
+        const clientesSalvos = JSON.parse(dadosClientes);
+        console.log('Clientes salvos:', clientesSalvos); // Verifique se os clientes são um array válido
+        setClientes(clientesSalvos);
+      }
+    } catch (error) {
+      console.log('Erro ao carregar os clientes:', error);
+    }
+  };
 
-    container1:{
-        backgroundColor:'#000',
-        width:'100%',
-        height:'7%',
+  const handleVerPerfil = (cliente) => {
+    // Navegar para a página de perfil do cliente, passando o objeto cliente como parâmetro
+    navigation.navigate('ClienteProfile', { cliente });
+  };
 
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.container1}></View>
+      <ScrollView style={styles.container2}>
+        {clientes.map((cliente, index) => (
+          <TouchableOpacity key={index} onPress={() => handleVerPerfil(cliente)}>
+            <Cardclientes
+              Nome={cliente.nome}
+              CPF={cliente.cpf}
+              Date={cliente.dataNascimento}
+            />
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      <View style={styles.container3}></View>
+    </SafeAreaView>
+  );
+}
 
-    },
-    container2:{
-        width:'100%',
-        height:'86%',
-        paddingTop:20,
+const styles = StyleSheet.create({
+  logo: {
+    width: 300,
+    height: 250,
+    alignSelf: 'center',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  container1: {
+    backgroundColor: '#000',
+    width: '100%',
+    height: '7%',
+    top: -60,
+  },
+  container2: {
+    width: '100%',
+    height: '86%',
+  },
+  container3: {
+    backgroundColor: '#000',
+    width: '100%',
+    height: '7%',
+    bottom: -40,
+  },
+});
 
-
-    },
-    container3:{
-        backgroundColor:'#000',
-        width:'100%',
-        height:'7%',
-
-
-    },
-
-    // QUADRO 
-    container4:{
-        position:'relative',
-        alignSelf:'center',
-        backgroundColor:'#000',
-        width:'90%',
-        height:180,
-        borderRadius:10,
-        paddingLeft:20,
-        paddingTop:20,
-    },
-
-    txt1:{
-        color:'#fff',
-        fontSize:15,
-        marginTop:3,
-
-    },
-
-    txt4:{
-        position:'absolute',
-        color:'#fff',
-        fontSize:30,
-        right:20,
-        top:130,
-
-    },
-  
-  });
-  export default Clientes;
+export default Clientes;

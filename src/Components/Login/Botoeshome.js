@@ -2,15 +2,15 @@ import { Text, View, TouchableOpacity,  StyleSheet } from 'react-native';
 import React from 'react';
 
 
-function Botaohome({ navigation, titulo1, titulo2 }) {
+function Botaohome({ navigation, titulo1, titulo2, envio1, envio2 }) {
 
     return(
         
                 <View style ={styles.botaohome}>
-                    <TouchableOpacity style ={styles.bott}>
+                    <TouchableOpacity style ={styles.bott} onPress={envio1}>
                         <Text style ={styles.txt}>{titulo1}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style ={styles.bott}>
+                    <TouchableOpacity style ={styles.bott} onPress={envio2}>
                         <Text style ={styles.txt}>{titulo2}</Text>
                     </TouchableOpacity>
                 </View>

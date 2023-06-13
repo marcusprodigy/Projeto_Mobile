@@ -1,95 +1,121 @@
-import { Text, View, SafeAreaView, StyleSheet } from 'react-native';
-import Cardclientes from '../Components/Home/Cardclientes';
-import React from 'react';
+import { Text, View, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
 
+function ClienteProfile({ route, navigation }) {
+  const { cliente } = route.params;
+  const [consultasMarcadas, setConsultasMarcadas] = useState([]);
 
-function ClienteProfile({ navigation }) {
+  useEffect(() => {
+    console.log('Dados do cliente:', cliente);
+  }, []);
 
+  const handleNavigateToPage = () => {
+    // Navegar para a página desejada
+    navigation.navigate('MarcarConsultas', { cliente: cliente, adicionarConsulta: adicionarConsultaMarcada });
+  };
+
+  const adicionarConsultaMarcada = (consulta) => {
+    setConsultasMarcadas((prevConsultas) => [...prevConsultas, consulta]);
+  };
+
+  const handleConsultaPress = (consulta) => {
+    // Faça algo quando o botão da consulta for pressionado
+    console.log('Consulta pressionada:', consulta);
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.clienteInfoContainer}>
+          {Object.entries(cliente).map(([key, value]) => (
+            <View style={styles.clienteInfoRow} key={key}>
+              <View style={styles.clienteInfoBox}>
+                <Text style={styles.clienteInfoKey}>{key}:</Text>
+              </View>
+              <View style={styles.clienteInfoBox}>
+                <Text style={styles.clienteInfoValue}>{value}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+        <ScrollView contentContainerStyle={styles.consultasContainer}>
+          {consultasMarcadas.map((consulta, index) => (
+            <TouchableOpacity
+              style={styles.consultaItem}
+              key={index}
+              onPress={() => handleConsultaPress(consulta)}
+            >
+              <Text>Data: {consulta.data}</Text>
+              <Text>Hora: {consulta.hora}</Text>
+              <Text>Observação: {consulta.observacao}</Text>
+            </TouchableOpacity>
+          ))}
+
+          
+        </ScrollView>
+      </ScrollView>
+      <TouchableOpacity style={styles.footerButton} onPress={handleNavigateToPage}>
+        <Text style={styles.footerButtonText}>Criar Consultas</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop:24,
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  scrollContainer: {
     
+    paddingTop:15,
+    flexGrow: 1,
+    alignItems: 'center',
+    paddingTop: 20,
+  },
+  clienteInfoContainer: {
+    width: '80%',
+  },
+  clienteInfoRow: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  clienteInfoBox: {
+    flex: 1,
+    backgroundColor: '#F5F5F5',
+    padding: 10,
+    marginRight: 10,
+    borderRadius: 5,
+  },
+  clienteInfoKey: {
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  clienteInfoValue: {
+    color: '#555',
+  },
+  footerButton: {
+    backgroundColor: '#000',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+  },
+  footerButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+  },
+  consultasContainer: {
+    flexGrow: 1,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  consultaItem: {
+    backgroundColor: '#F5F5F5',
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 5,
+  },
+});
 
-    return(
-        
-        <SafeAreaView style ={styles.container}>
-
-            <View style ={styles.container1}></View>
-                <View style ={styles.container2}>
-                    <Text></Text>
-
-                
-                </View>
-            <View style ={styles.container3}></View>
-
-
-        </SafeAreaView>
-               
-
-
-      )
-  
-  }
-  
-  const styles = StyleSheet.create({
-    logo:{
-        width:300,
-        height:250,
-        alignSelf:'center',
-    },
-    container: {
-      flex: 1,
-      backgroundColor:'#fff'
-      // Defina os estilos desejados para o container aqui
-    },
-
-    container1:{
-        backgroundColor:'#000',
-        width:'100%',
-        height:'7%',
-
-
-    },
-    container2:{
-        backgroundColor:'#030',
-        width:'100%',
-        height:'86%',
-        paddingTop:20,
-
-
-    },
-    container3:{
-        backgroundColor:'#000',
-        width:'100%',
-        height:'7%',
-
-
-    },
-
-    // QUADRO 
-    container4:{
-        position:'relative',
-        alignSelf:'center',
-        backgroundColor:'#000',
-        width:'90%',
-        height:180,
-        borderRadius:10,
-        paddingLeft:20,
-        paddingTop:20,
-    },
-
-    txt1:{
-        color:'#fff',
-        fontSize:15,
-        marginTop:3,
-
-    },
-
-    txt4:{
-        position:'absolute',
-        color:'#fff',
-        fontSize:30,
-        right:20,
-        top:130,
-
-    },
-  
-  });
-  export default ClienteProfile;
+export default ClienteProfile;

@@ -1,57 +1,50 @@
-import { Text,  TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
+function Cardclientes({ Nome, CPF, Date }) {
+  return (
+    <View style={styles.container}>
+      <View style={styles.infoContainer}>
+        <Text style={styles.label}>Nome:</Text>
+        <Text style={styles.text}>{Nome}</Text>
+      </View>
+      <View style={styles.infoContainer}>
+        <Text style={styles.label}>CPF:</Text>
+        <Text style={styles.text}>{CPF}</Text>
+      </View>
+      <View style={styles.infoContainer}>
+        <Text style={styles.label}>Data de Nascimento:</Text>
+        <Text style={styles.text}>{Date}</Text>
+      </View>
+    </View>
+  );
+}
 
-function Cardclientes({ Nome, CPF, Date, Tag }) {
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f3f3f3',
+    borderRadius: 10,
+    marginHorizontal: 10,
+    marginVertical: 8,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  infoContainer: {
+    marginBottom: 8,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  text: {
+    fontSize: 14,
+    color: '#666',
+  },
+});
 
-    return(
-
-
-        <TouchableOpacity style ={styles.container4}>
-            <Text style ={styles.txt1}>{Nome}</Text>
-            <Text style ={styles.txt1}>CPF: {CPF}</Text>
-            <Text style ={styles.txt1}>{Date}</Text>
-            <Text style ={styles.txt4}>#1</Text>
-
-        </TouchableOpacity>
- 
-               
-
-
-      )
-  
-  }
-  
-  const styles = StyleSheet.create({
-
-    // QUADRO 
-    container4:{
-        position:'relative',
-        alignSelf:'center',
-        backgroundColor:'#000',
-        width:'90%',
-        height:180,
-        borderRadius:10,
-        paddingLeft:20,
-        paddingTop:20,
-        marginBottom:15,
-    },
-
-    txt1:{
-        color:'#fff',
-        fontSize:15,
-        marginTop:3,
-
-    },
-
-    txt4:{
-        position:'absolute',
-        color:'#fff',
-        fontSize:30,
-        right:20,
-        top:130,
-
-    },
-  
-  });
-  export default Cardclientes;
+export default Cardclientes;

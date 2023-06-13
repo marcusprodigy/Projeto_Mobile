@@ -14,8 +14,8 @@ function Home({ navigation }) {
             <View style ={styles.container2}>
 
                 <Image source={logo} style ={styles.logo} />
-                <Botaohome titulo1="CADASTRAR  CLIENTE" titulo2="MEUS CLIENTE"/>
-                <Botaohome titulo1="MARCAR CONSULTAS" titulo2="GERAR RECEITA"/>
+                <Botaohome titulo1="CADASTRAR  CLIENTE" titulo2="MEUS CLIENTE" info1={() => navigation.navigate('Cadastrar')} info2={() => navigation.navigate('Clientes')}/>
+                <Botaohome titulo1="MARCAR CONSULTAS" titulo2="GERAR RECEITA" info1={() => navigation.navigate('Clientes')} info2={() => navigation.navigate('Clientes')}/>
            
            
            </View>

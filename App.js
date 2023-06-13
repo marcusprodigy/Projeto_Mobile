@@ -1,11 +1,12 @@
 import React from 'react';
 // Views
-// import Login from './src/Views/Login';
+import Login from './src/Views/Login';
 import Home from './src/Views/Home';
 import Cadastrar from './src/Views/Cadastrar';
 import Clientes from './src/Views/Clientes';
 import ClienteProfile from './src/Views/ClienteProfile';
 import MarcarConsultas from './src/Views/MarcarConsultas';
+import MinhasConsultas from './src/Views/MinhasConsultas';
 
 //Func telas
 import { NavigationContainer } from '@react-navigation/native';
@@ -31,7 +32,7 @@ return (
 function MyStack() {
   return (
     <Stack.Navigator>
-    {/* /  <Stack.Screen 
+      {/* <Stack.Screen 
         name="Login" 
           component={Login} 
             options={{ headerShown: false }}/> */}
@@ -56,10 +57,18 @@ function MyStack() {
                 component={ClienteProfile} 
                   options={{ headerShown: false }}/>
 
-      <Stack.Screen 
+
+<Stack.Screen 
               name="MarcarConsultas" 
                 component={MarcarConsultas} 
                   options={{ headerShown: false }}/>  
+
+<Stack.Screen 
+              name="MinhasConsultas" 
+                component={MinhasConsultas} 
+                  options={{ headerShown: false }}/>  
+
+                  
 
 
     </Stack.Navigator>

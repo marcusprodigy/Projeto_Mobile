@@ -1,66 +1,130 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Linking } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import SendIntent from 'react-native-send-intent';
+import PDFLib, { PDFDocument, PDFPage } from 'react-native-pdf-lib';
+
+// Função adicionarConsultaId
+function adicionarConsultaId() {
+  // Implemente sua lógica aqui
+}
 
 function MarcarConsultas({ route, navigation }) {
-  const { cliente } = route.params;
+  const { cliente } = route.params || {};
+  const { adicionarConsultaId } = route.params;
   const [dataConsulta, setDataConsulta] = useState('');
   const [horaConsulta, setHoraConsulta] = useState('');
   const [observacao, setObservacao] = useState('');
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={handleSalvarConsulta}>
+          <Text style={styles.headerButtonText}>Salvar</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   const handleSalvarConsulta = async () => {
     try {
-      // Obtém as consultas existentes do AsyncStorage
       const consultasSalvas = await AsyncStorage.getItem('Consultas');
       let consultas = [];
 
       if (consultasSalvas !== null) {
-        // Converte as consultas existentes em um array de objetos
         consultas = JSON.parse(consultasSalvas);
       }
 
-      // Adiciona a nova consulta ao array de objetos
       consultas.push({
-        clienteId: cliente.id, // Supondo que o objeto cliente tenha uma propriedade "id"
+        clienteId: cliente.id,
+        clienteNome: cliente.nome,
         dataConsulta,
         horaConsulta,
         observacao,
       });
 
-      // Salva o array de objetos atualizado no AsyncStorage
       await AsyncStorage.setItem('Consultas', JSON.stringify(consultas));
       console.log('Consulta agendada com sucesso!');
 
-      // Limpa os campos do formulário
+      // Criação do PDF
+      const pdfPath = await createPDF(cliente, dataConsulta, horaConsulta, observacao);
+      console.log('PDF criado:', pdfPath);
+
       setDataConsulta('');
       setHoraConsulta('');
       setObservacao('');
 
-      // Envia mensagem por WhatsApp ao cliente
-      const mensagem = `Olá ${cliente.nome}, sua consulta foi agendada para o dia ${dataConsulta} às ${horaConsulta}.`;
-      SendIntent.sendText({
-        title: 'Marcar Consulta',
-        text: mensagem,
-        type: SendIntent.TEXT_PLAIN,
-        phone: cliente.numeroTelefone, // Supondo que o objeto cliente tenha uma propriedade "numeroTelefone"
-      });
+      // Chamando a função adicionarConsultaId
+      adicionarConsultaId();
 
-      // Redireciona para a página ClienteProfile
-      navigation.navigate('ClienteProfile', { cliente: cliente });
     } catch (error) {
       console.log('Erro ao salvar a consulta:', error);
     }
+  };
+
+  const createPDF = async (cliente, dataConsulta, horaConsulta, observacao) => {
+    const pdfPath = `${PDFLib.CacheDirectoryPath}/consulta.pdf`;
+
+    const page1 = PDFPage.create()
+      .setMediaBox(595.276, 841.890) // Tamanho A4
+      .drawText(`Nome: ${cliente.nome}`, {
+        x: 50,
+        y: 750,
+        color: '#000000',
+        fontName: 'Helvetica',
+        fontSize: 16,
+      })
+      .drawText(`CPF: ${cliente.cpf}`, {
+        x: 50,
+        y: 700,
+        color: '#000000',
+        fontName: 'Helvetica',
+        fontSize: 16,
+      })
+      .drawText(`Data de Nascimento: ${cliente.dataNascimento}`, {
+        x: 50,
+        y: 650,
+        color: '#000000',
+        fontName: 'Helvetica',
+        fontSize: 16,
+      })
+      .drawText(`Data da Consulta: ${dataConsulta}`, {
+        x: 50,
+        y: 600,
+        color: '#000000',
+        fontName: 'Helvetica',
+        fontSize: 16,
+      })
+      .drawText(`Hora da Consulta: ${horaConsulta}`, {
+        x: 50,
+        y: 550,
+        color: '#000000',
+        fontName: 'Helvetica',
+        fontSize: 16,
+      })
+      .drawText(`Observação: ${observacao}`, {
+        x: 50,
+        y: 500,
+        color: '#000000',
+        fontName: 'Helvetica',
+        fontSize: 16,
+      });
+
+    const pdfDoc = PDFDocument.create(pdfPath);
+    pdfDoc.addPages(page1);
+    await PDFLib.writeAsync(pdfDoc).catch((error) => {
+      throw new Error(`Failed to create PDF: ${error}`);
+    });
+
+    return pdfPath;
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.laudoContainer}>
         <Text style={styles.laudoTitle}>Laudo do Cliente</Text>
-        <Text style={styles.laudoText}>Nome: {cliente.nome}</Text>
-        <Text style={styles.laudoText}>CPF: {cliente.cpf}</Text>
-        <Text style={styles.laudoText}>Data de Nascimento: {cliente.dataNascimento}</Text>
-        {/* Adicione outras informações do cliente que desejar */}
+        <Text style={styles.laudoText}>Nome: {cliente ? cliente.nome : ''}</Text>
+        <Text style={styles.laudoText}>CPF: {cliente ? cliente.cpf : ''}</Text>
+        <Text style={styles.laudoText}>Data de Nascimento: {cliente ? cliente.dataNascimento : ''}</Text>
       </View>
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.formContainer}>
@@ -97,6 +161,7 @@ function MarcarConsultas({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: '15%',
     flex: 1,
     backgroundColor: '#fff',
   },
@@ -144,6 +209,11 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
+  },
+  headerButtonText: {
+    color: '#000',
+    fontSize: 16,
+    marginRight: 10,
   },
 });
 

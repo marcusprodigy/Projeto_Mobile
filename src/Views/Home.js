@@ -14,8 +14,11 @@ function Home({ navigation }) {
             <View style ={styles.container2}>
 
                 <Image source={logo} style ={styles.logo} />
-                <Botaohome titulo1="CADASTRAR  CLIENTE" titulo2="MEUS CLIENTE" info1={() => navigation.navigate('Cadastrar')} info2={() => navigation.navigate('Clientes')}/>
-                <Botaohome titulo1="MARCAR CONSULTAS" titulo2="GERAR RECEITA" info1={() => navigation.navigate('Clientes')} info2={() => navigation.navigate('Clientes')}/>
+                <Botaohome titulo1="CADASTRAR  CLIENTE" titulo2="MEUS CLIENTE" info1={() => navigation.navigate('Cadastrar')} info2={() => navigation.navigate('Clientes')} exibirBotao2={true}/>
+                <Botaohome titulo1="MINHA CONSULTAS" titulo2="MEUS CLIENTES" info1={() => navigation.navigate('MinhasConsultas')} info2={() => navigation.navigate('Clientes')} exibirBotao2={false} />
+
+
+
            
            
            </View>

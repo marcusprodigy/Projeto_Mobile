@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Linking } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import PDFLib, { PDFDocument, PDFPage } from 'react-native-pdf-lib';
-
-// Função adicionarConsultaId
-function adicionarConsultaId() {
-  // Implemente sua lógica aqui
-}
 
 function MarcarConsultas({ route, navigation }) {
   const { cliente, adicionarConsultaId, adicionarConsulta } = route.params || {};
@@ -24,101 +18,36 @@ function MarcarConsultas({ route, navigation }) {
     });
   }, [navigation]);
 
-  const handleSalvarConsulta = async (adicionarConsultaFn) => {
+  const handleSalvarConsulta = async () => {
+    // Create a consultation object using the entered data
+    const consulta = {
+      dataConsulta,
+      horaConsulta,
+      observacao,
+      clienteCPF: cliente.cpf, // Adicione o CPF do cliente à consulta
+    };
+  
+    // Call the adicionarConsultaId function passed in the route params to update the consultations in ClienteProfile
+    adicionarConsultaId();
+  
+    // Call the adicionarConsulta function passed in the route params to add the new consultation
+    adicionarConsulta(consulta);
+  
+    // Save the consultation data in AsyncStorage or any other storage mechanism as required
     try {
       const consultasSalvas = await AsyncStorage.getItem('Consultas');
-      let consultas = [];
-
-      if (consultasSalvas !== null) {
-        consultas = JSON.parse(consultasSalvas);
-      }
-
-      consultas.push({
-        clienteId: cliente.id,
-        clienteNome: cliente.nome,
-        clienteTelefone: cliente.telefone, 
-        dataConsulta,
-        horaConsulta,
-        observacao,
-      });
-
-      adicionarConsulta();
-
+      const consultas = consultasSalvas ? JSON.parse(consultasSalvas) : [];
+      consultas.push(consulta);
       await AsyncStorage.setItem('Consultas', JSON.stringify(consultas));
-      console.log('Consulta agendada com sucesso!');
-
-      // Criação do PDF
-      const pdfPath = await createPDF(cliente, dataConsulta, horaConsulta, observacao);
-      console.log('PDF criado:', pdfPath);
-
-      setDataConsulta('');
-      setHoraConsulta('');
-      setObservacao('');
-
-      // Chamando a função adicionarConsultaId
-      adicionarConsultaId();
-      adicionarConsulta();
     } catch (error) {
-      console.log('Erro ao salvar a consulta:', error);
+      console.log('Erro ao salvar as consultas:', error);
     }
+  
+    // Navigate back to ClienteProfile
+    navigation.goBack();
   };
+  
 
-  const createPDF = async (cliente, dataConsulta, horaConsulta, observacao) => {
-    const pdfPath = `${PDFLib.CacheDirectoryPath}/consulta.pdf`;
-
-    const page1 = PDFPage.create()
-      .setMediaBox(595.276, 841.890) // Tamanho A4
-      .drawText(`Nome: ${cliente.nome}`, {
-        x: 50,
-        y: 750,
-        color: '#000000',
-        fontName: 'Helvetica',
-        fontSize: 16,
-      })
-      .drawText(`CPF: ${cliente.cpf}`, {
-        x: 50,
-        y: 700,
-        color: '#000000',
-        fontName: 'Helvetica',
-        fontSize: 16,
-      })
-      .drawText(`Data de Nascimento: ${cliente.dataNascimento}`, {
-        x: 50,
-        y: 650,
-        color: '#000000',
-        fontName: 'Helvetica',
-        fontSize: 16,
-      })
-      .drawText(`Data da Consulta: ${dataConsulta}`, {
-        x: 50,
-        y: 600,
-        color: '#000000',
-        fontName: 'Helvetica',
-        fontSize: 16,
-      })
-      .drawText(`Hora da Consulta: ${horaConsulta}`, {
-        x: 50,
-        y: 550,
-        color: '#000000',
-        fontName: 'Helvetica',
-        fontSize: 16,
-      })
-      .drawText(`Observação: ${observacao}`, {
-        x: 50,
-        y: 500,
-        color: '#000000',
-        fontName: 'Helvetica',
-        fontSize: 16,
-      });
-
-    const pdfDoc = PDFDocument.create(pdfPath);
-    pdfDoc.addPages(page1);
-    await PDFLib.writeAsync(pdfDoc).catch((error) => {
-      throw new Error(`Failed to create PDF: ${error}`);
-    });
-
-    return pdfPath;
-  };
 
   return (
     <View style={styles.container}>

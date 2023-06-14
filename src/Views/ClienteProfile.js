@@ -1,34 +1,51 @@
-import { Text, View, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { Text, View, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import MinhasConsultas from './MinhasConsultas';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function ClienteProfile({ route, navigation }) {
   const { cliente } = route.params;
   const [consultasMarcadas, setConsultasMarcadas] = useState([]);
 
   useEffect(() => {
-    console.log('Dados do cliente:', cliente);
+    fetchConsultasMarcadas();
   }, []);
 
+  const fetchConsultasMarcadas = async () => {
+    try {
+      const consultasSalvas = await AsyncStorage.getItem('Consultas');
+      const consultas = consultasSalvas ? JSON.parse(consultasSalvas) : [];
+      setConsultasMarcadas(consultas);
+    } catch (error) {
+      console.log('Erro ao buscar as consultas:', error);
+    }
+  };
+
   const handleNavigateToPage = () => {
-    // Navegar para a página desejada
     navigation.navigate('MarcarConsultas', {
       cliente,
       adicionarConsultaId: adicionarConsultaId,
       adicionarConsulta: adicionarConsultaMarcada,
     });
-
   };
+
   const adicionarConsultaId = (consultaId) => {
-    // Faça algo com o ID da consulta, como armazená-lo em algum lugar
     console.log('ID da consulta:', consultaId);
   };
 
-  const adicionarConsultaMarcada = (consulta) => {
-    setConsultasMarcadas((prevConsultas) => [...prevConsultas, consulta]);
+  const adicionarConsultaMarcada = async (consulta) => {
+    try {
+      const consultasSalvas = await AsyncStorage.getItem('Consultas');
+      const consultas = consultasSalvas ? JSON.parse(consultasSalvas) : [];
+      consultas.push(consulta);
+      await AsyncStorage.setItem('Consultas', JSON.stringify(consultas));
+      setConsultasMarcadas(consultas);
+    } catch (error) {
+      console.log('Erro ao salvar as consultas:', error);
+    }
   };
 
   const handleConsultaPress = (consulta) => {
-    // Faça algo quando o botão da consulta for pressionado
     console.log('Consulta pressionada:', consulta);
   };
 
@@ -47,20 +64,8 @@ function ClienteProfile({ route, navigation }) {
             </View>
           ))}
         </View>
-        <ScrollView contentContainerStyle={styles.consultasContainer}>
-          {consultasMarcadas.map((consulta, index) => (
-            <TouchableOpacity
-              style={styles.consultaItem}
-              key={index}
-              onPress={() => handleConsultaPress(consulta)}
-            >
-              <Text>Data: {consulta.data}</Text>
-              <Text>Hora: {consulta.hora}</Text>
-              <Text>Observação: {consulta.observacao}</Text>
-            </TouchableOpacity>
-          ))}
-
-          
+        <ScrollView>
+          <MinhasConsultas cpf={cliente.cpf} />
         </ScrollView>
       </ScrollView>
       <TouchableOpacity style={styles.footerButton} onPress={handleNavigateToPage}>
@@ -70,11 +75,17 @@ function ClienteProfile({ route, navigation }) {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     paddingTop:24,
     flex: 1,
     backgroundColor: '#fff',
+  },
+  consultasContainer: {
+    flexGrow: 1,
+    alignItems: 'center',
+    marginTop: 20,
   },
   scrollContainer: {
     

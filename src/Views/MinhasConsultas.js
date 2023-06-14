@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function MinhasConsultas() {
+function MinhasConsultas({ cpf }) {
   const [consultas, setConsultas] = useState([]);
 
   useEffect(() => {
@@ -14,13 +14,19 @@ function MinhasConsultas() {
       const consultasSalvas = await AsyncStorage.getItem('Consultas');
       if (consultasSalvas !== null) {
         const consultasParseadas = JSON.parse(consultasSalvas);
-        const consultasLimitadas = consultasParseadas.slice(0, 10).reverse(); // Limita para as 10 primeiras consultas e reverte a ordem
+        const consultasFiltradas = consultasParseadas.filter(
+          (consulta) => consulta.clienteCPF === cpf
+        );
+        const consultasLimitadas = consultasFiltradas
+          .slice(0, 10)
+          .reverse(); // Limita para as 10 primeiras consultas e reverte a ordem
         setConsultas(consultasLimitadas);
       }
     } catch (error) {
       console.log('Erro ao carregar consultas:', error);
     }
   };
+  
 
   const renderItem = ({ item }) => (
     <View style={styles.item}>
@@ -29,6 +35,8 @@ function MinhasConsultas() {
         <Text>{item.clienteNome}</Text>
         <Text style={styles.label}>Telefone do Cliente:</Text>
         <Text>{item.clienteTelefone}</Text>
+        <Text style={styles.label}>CPF</Text>
+        <Text>{item.clienteCPF}</Text>
       </View>
       <View style={styles.consultaContainer}>
         <Text style={styles.label}>Horário:</Text>
@@ -46,11 +54,11 @@ function MinhasConsultas() {
       <Text style={styles.title}>Minhas Consultas</Text>
       {consultas.length > 0 ? (
         <FlatList
-        data={consultas}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => `consulta_${index}`} // Usando o índice como chave
-        showsVerticalScrollIndicator={false} // Remove a barra de rolagem
-      />
+          data={consultas}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => `consulta_${index}`} // Usando o índice como chave
+          showsVerticalScrollIndicator={false} // Remove a barra de rolagem
+        />
       ) : (
         <Text style={styles.noConsultasText}>Nenhuma consulta marcada.</Text>
       )}

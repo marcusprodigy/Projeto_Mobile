@@ -27,7 +27,10 @@ function Clientes({ navigation }) {
 
   const handleVerPerfil = (cliente) => {
     // Navegar para a página de perfil do cliente, passando o objeto cliente como parâmetro
-    navigation.navigate('ClienteProfile', { cliente });
+    navigation.navigate('ClienteProfile', { cliente: cliente });
+
+
+  
   };
 
   return (

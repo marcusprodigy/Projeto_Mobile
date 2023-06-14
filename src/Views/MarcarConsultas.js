@@ -9,8 +9,7 @@ function adicionarConsultaId() {
 }
 
 function MarcarConsultas({ route, navigation }) {
-  const { cliente } = route.params || {};
-  const { adicionarConsultaId } = route.params;
+  const { cliente, adicionarConsultaId, adicionarConsulta } = route.params || {};
   const [dataConsulta, setDataConsulta] = useState('');
   const [horaConsulta, setHoraConsulta] = useState('');
   const [observacao, setObservacao] = useState('');
@@ -18,14 +17,14 @@ function MarcarConsultas({ route, navigation }) {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={handleSalvarConsulta}>
+        <TouchableOpacity onPress={() => handleSalvarConsulta(adicionarConsultaId)}>
           <Text style={styles.headerButtonText}>Salvar</Text>
         </TouchableOpacity>
       ),
     });
   }, [navigation]);
 
-  const handleSalvarConsulta = async () => {
+  const handleSalvarConsulta = async (adicionarConsultaFn) => {
     try {
       const consultasSalvas = await AsyncStorage.getItem('Consultas');
       let consultas = [];
@@ -37,10 +36,13 @@ function MarcarConsultas({ route, navigation }) {
       consultas.push({
         clienteId: cliente.id,
         clienteNome: cliente.nome,
+        clienteTelefone: cliente.telefone, 
         dataConsulta,
         horaConsulta,
         observacao,
       });
+
+      adicionarConsulta();
 
       await AsyncStorage.setItem('Consultas', JSON.stringify(consultas));
       console.log('Consulta agendada com sucesso!');
@@ -55,7 +57,7 @@ function MarcarConsultas({ route, navigation }) {
 
       // Chamando a função adicionarConsultaId
       adicionarConsultaId();
-
+      adicionarConsulta();
     } catch (error) {
       console.log('Erro ao salvar a consulta:', error);
     }
@@ -124,6 +126,7 @@ function MarcarConsultas({ route, navigation }) {
         <Text style={styles.laudoTitle}>Laudo do Cliente</Text>
         <Text style={styles.laudoText}>Nome: {cliente ? cliente.nome : ''}</Text>
         <Text style={styles.laudoText}>CPF: {cliente ? cliente.cpf : ''}</Text>
+        <Text style={styles.laudoText}>Telefone: {cliente ? cliente.telefone : ''}</Text>
         <Text style={styles.laudoText}>Data de Nascimento: {cliente ? cliente.dataNascimento : ''}</Text>
       </View>
       <ScrollView style={styles.scrollContainer}>

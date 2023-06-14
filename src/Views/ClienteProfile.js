@@ -11,7 +11,16 @@ function ClienteProfile({ route, navigation }) {
 
   const handleNavigateToPage = () => {
     // Navegar para a página desejada
-    navigation.navigate('MarcarConsultas', { cliente: cliente, adicionarConsulta: adicionarConsultaMarcada });
+    navigation.navigate('MarcarConsultas', {
+      cliente,
+      adicionarConsultaId: adicionarConsultaId,
+      adicionarConsulta: adicionarConsultaMarcada,
+    });
+
+  };
+  const adicionarConsultaId = (consultaId) => {
+    // Faça algo com o ID da consulta, como armazená-lo em algum lugar
+    console.log('ID da consulta:', consultaId);
   };
 
   const adicionarConsultaMarcada = (consulta) => {

@@ -197,7 +197,7 @@ function Cadastrar({ navigation }) {
         alignItems:'center',
         justifyContent:'center',
         backgroundColor:'#000',
-        width:'40%',
+        width:'10%',
         height:65,
         borderRadius:50,
         marginTop:40,

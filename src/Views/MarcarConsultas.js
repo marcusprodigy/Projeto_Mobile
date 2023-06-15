@@ -1,62 +1,59 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Linking } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function MarcarConsultas({ route, navigation }) {
-  const { cliente, adicionarConsultaId, adicionarConsulta } = route.params || {};
+  const { cliente } = route.params;
   const [dataConsulta, setDataConsulta] = useState('');
   const [horaConsulta, setHoraConsulta] = useState('');
   const [observacao, setObservacao] = useState('');
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity onPress={() => handleSalvarConsulta(adicionarConsultaId)}>
-          <Text style={styles.headerButtonText}>Salvar</Text>
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation]);
-
   const handleSalvarConsulta = async () => {
-    // Create a consultation object using the entered data
-    const consulta = {
-      dataConsulta,
-      horaConsulta,
-      observacao,
-      clienteCPF: cliente.cpf, // Adicione o CPF do cliente à consulta
-    };
-  
-    // Call the adicionarConsultaId function passed in the route params to update the consultations in ClienteProfile
-    adicionarConsultaId();
-  
-    // Call the adicionarConsulta function passed in the route params to add the new consultation
-    adicionarConsulta(consulta);
-  
-    // Save the consultation data in AsyncStorage or any other storage mechanism as required
     try {
+      // Obtém as consultas existentes do AsyncStorage
       const consultasSalvas = await AsyncStorage.getItem('Consultas');
-      const consultas = consultasSalvas ? JSON.parse(consultasSalvas) : [];
-      consultas.push(consulta);
-      await AsyncStorage.setItem('Consultas', JSON.stringify(consultas));
-    } catch (error) {
-      console.log('Erro ao salvar as consultas:', error);
-    }
-  
-    // Navigate back to ClienteProfile
-    navigation.goBack();
-  };
-  
+      let consultas = [];
 
+      if (consultasSalvas !== null) {
+        // Converte as consultas existentes em um array de objetos
+        consultas = JSON.parse(consultasSalvas);
+      }
+
+      // Adiciona a nova consulta ao array de objetos
+      consultas.push({
+        clienteId: cliente.id, // Supondo que o objeto cliente tenha uma propriedade "id"
+        clienteNome: cliente.nome, // Adiciona o nome do cliente à consulta
+        clienteCPF: cliente.cpf, // Adiciona o CPF do cliente à consulta
+        clienteDataNascimento: cliente.dataNascimento, // Adiciona a data de nascimento do cliente à consulta
+        dataConsulta,
+        horaConsulta,
+        observacao,
+      });
+
+      // Salva o array de objetos atualizado no AsyncStorage
+      await AsyncStorage.setItem('Consultas', JSON.stringify(consultas));
+      console.log('Consulta agendada com sucesso!');
+
+      // Limpa os campos do formulário
+      setDataConsulta('');
+      setHoraConsulta('');
+      setObservacao('');
+
+      // Redireciona para a página ClienteProfile, passando o objeto cliente como parâmetro
+      navigation.navigate('ClienteProfile', { cliente: cliente });
+    } catch (error) {
+      console.log('Erro ao salvar a consulta:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.laudoContainer}>
         <Text style={styles.laudoTitle}>Laudo do Cliente</Text>
-        <Text style={styles.laudoText}>Nome: {cliente ? cliente.nome : ''}</Text>
-        <Text style={styles.laudoText}>CPF: {cliente ? cliente.cpf : ''}</Text>
-        <Text style={styles.laudoText}>Telefone: {cliente ? cliente.telefone : ''}</Text>
-        <Text style={styles.laudoText}>Data de Nascimento: {cliente ? cliente.dataNascimento : ''}</Text>
+        <Text style={styles.laudoText}>Nome: {cliente.nome}</Text>
+        <Text style={styles.laudoText}>CPF: {cliente.cpf}</Text>
+        <Text style={styles.laudoText}>Data de Nascimento: {cliente.dataNascimento}</Text>
+        {/* Adicione outras informações do cliente que desejar */}
       </View>
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.formContainer}>
@@ -90,10 +87,8 @@ function MarcarConsultas({ route, navigation }) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
-    paddingTop: '15%',
     flex: 1,
     backgroundColor: '#fff',
   },
@@ -141,11 +136,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
-  },
-  headerButtonText: {
-    color: '#000',
-    fontSize: 16,
-    marginRight: 10,
   },
 });
 

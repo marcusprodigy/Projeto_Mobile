@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import { Text, View, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MinhasConsultas from './MinhasConsultas';
 
@@ -14,29 +14,19 @@ function ClienteProfile({ route, navigation }) {
   const fetchConsultasMarcadas = async () => {
     try {
       const consultasSalvas = await AsyncStorage.getItem('Consultas');
+      console.log(consultasSalvas);
       const consultas = consultasSalvas ? JSON.parse(consultasSalvas) : [];
+      console.log(consultas);
       const consultasCliente = consultas.filter(consulta => consulta.clienteCPF === cliente.cpf);
+      console.log(consultasCliente);
       setConsultasMarcadas(consultasCliente);
     } catch (error) {
       console.log('Erro ao buscar as consultas:', error);
     }
   };
 
-
-  const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.consultaItem} onPress={() => handleConsultaPress(item)}>
-      <Text>{item.data}</Text>
-      <Text>{item.horario}</Text>
-      <Text>{item.medico}</Text>
-    </TouchableOpacity>
-  );
-
   const handleNavigateToPage = () => {
     navigation.navigate('MarcarConsultas', { cliente: cliente });
-  };
-
-  const handleConsultaPress = (consulta) => {
-    console.log('Consulta pressionada:', consulta);
   };
 
   return (
@@ -57,7 +47,10 @@ function ClienteProfile({ route, navigation }) {
         <View style={styles.consultasContainer}>
           <Text style={styles.consultasTitle}>Consultas Marcadas:</Text>
           {consultasMarcadas.length > 0 ? (
-            <MinhasConsultas consultas={consultasMarcadas} />
+            <MinhasConsultas
+              consultas={consultasMarcadas.filter(item => consulta.clienteCPF === item.cpf)}
+            />
+          
           ) : (
             <Text style={styles.noConsultasText}>Nenhuma consulta marcada.</Text>
           )}
@@ -70,10 +63,9 @@ function ClienteProfile({ route, navigation }) {
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
-    paddingTop:24,
+    paddingTop: 24,
     flex: 1,
     backgroundColor: '#fff',
   },
@@ -83,8 +75,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   scrollContainer: {
-    
-    paddingTop:15,
+    paddingTop: 15,
     flexGrow: 1,
     alignItems: 'center',
     paddingTop: 20,
@@ -120,16 +111,13 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 16,
   },
-  consultasContainer: {
-    flexGrow: 1,
-    alignItems: 'center',
-    marginTop: 20,
+  consultasTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
-  consultaItem: {
-    backgroundColor: '#F5F5F5',
-    padding: 10,
-    marginVertical: 5,
-    borderRadius: 5,
+  noConsultasText: {
+    fontStyle: 'italic',
   },
 });
 

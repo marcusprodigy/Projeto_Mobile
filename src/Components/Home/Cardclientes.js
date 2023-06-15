@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-function Cardclientes({ Nome, CPF, Date }) {
+function Cardclientes({ Nome, CPF, Date, clienteAberto }) {
   return (
     <View style={styles.container}>
       <View style={styles.infoContainer}>
@@ -16,6 +16,11 @@ function Cardclientes({ Nome, CPF, Date }) {
         <Text style={styles.label}>Data de Nascimento:</Text>
         <Text style={styles.text}>{Date}</Text>
       </View>
+      {CPF === clienteAberto?.cpf && (
+        <View style={styles.infoContainer}>
+          <Text style={styles.label}>Cliente Aberto</Text>
+        </View>
+      )}
     </View>
   );
 }

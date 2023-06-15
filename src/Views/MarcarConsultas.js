@@ -38,6 +38,11 @@ function MarcarConsultas({ route, navigation }) {
       setDataConsulta('');
       setHoraConsulta('');
       setObservacao('');
+      console.log('Dados da consulta:');
+      console.log('Cliente:', cliente);
+      console.log('Data da Consulta:', dataConsulta);
+      console.log('Hora da Consulta:', horaConsulta);
+      console.log('Observação:', observacao);
 
       // Redireciona para a página ClienteProfile, passando o objeto cliente como parâmetro
       navigation.navigate('ClienteProfile', { cliente: cliente });

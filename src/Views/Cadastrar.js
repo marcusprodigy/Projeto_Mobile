@@ -1,6 +1,8 @@
-import { Text, View, TextInput, TouchableOpacity, SafeAreaView, StyleSheet } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DatePicker from 'react-native-datepicker';
+import { parse, isValid, format } from 'date-fns';
 
 function Cadastrar({ navigation }) {
   const [nome, setNome] = useState('');
@@ -18,15 +20,16 @@ function Cadastrar({ navigation }) {
       return;
     }
 
-    // Verifica se a data de nascimento está no formato correto
-    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dataNascimento)) {
-      console.log('Data de nascimento inválida. Utilize o formato dd/mm/yyyy.');
-      return;
-    }
-
     // Verifica se o número possui apenas números
     if (!/^\d+$/.test(numero)) {
       console.log('Número inválido. Apenas números são permitidos.');
+      return;
+    }
+
+ 
+    const parsedDataNascimento = parse(dataNascimento, 'dd/MM/yyyy', new Date());
+    if (!isValid(parsedDataNascimento) || parsedDataNascimento > new Date()) {
+      console.log('Data de nascimento inválida. Utilize o formato dd/mm/yyyy.');
       return;
     }
 
@@ -50,18 +53,18 @@ function Cadastrar({ navigation }) {
       if (!Array.isArray(clientesSalvos)) {
         clientesSalvos = [];
       }
-
+      const dataFormatada = format(parsedDataNascimento, 'dd/MM/yyyy');
       // Adiciona os novos dados ao array de objetos
       clientesSalvos.push({
         nome,
         cpf,
-        dataNascimento,
+        dataNascimento: dataFormatada, // Salva a data formatada
         endereco,
         numero,
         bairro,
         telefone
       });
-
+   
       // Salva o array de objetos atualizado no AsyncStorage
       await AsyncStorage.setItem('Clientes', JSON.stringify(clientesSalvos));
       console.log('Dados de cadastro salvos com sucesso!');
@@ -74,7 +77,7 @@ function Cadastrar({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior="padding">
       <View style={styles.container1}></View>
       <View style={styles.container2}>
         <TextInput
@@ -92,14 +95,34 @@ function Cadastrar({ navigation }) {
           onChangeText={setCpf}
           keyboardType='numeric'
         />
-        <TextInput
+        <DatePicker
           style={styles.input}
-          placeholder='Data de Nascimento (dd/mm/yyyy)'
-          placeholderTextColor='gray'
-          value={dataNascimento}
-          onChangeText={setDataNascimento}
-          keyboardType='numbers-and-punctuation'
+          date={dataNascimento}
+          mode="date"
+          placeholder="Data de Nascimento"
+          format="DD/MM/YYYY"
+          confirmBtnText="Confirmar"
+          cancelBtnText="Cancelar"
+          customStyles={{
+            dateInput: {
+              borderWidth: 0,
+              alignItems: 'flex-start',
+            },
+            dateText: {
+              fontSize: 20,
+              fontStyle: 'italic',
+              color: 'gray',
+            },
+            placeholderText: {
+              fontSize: 20,
+              fontStyle: 'italic',
+              color: 'gray',
+            },
+          }}
+          onDateChange={(date) => setDataNascimento(date)}
+          useNativeDriver={false}
         />
+
         <TextInput
           style={styles.input}
           placeholder='Endereço'
@@ -124,88 +147,75 @@ function Cadastrar({ navigation }) {
         />
         <TextInput
           style={styles.input}
-          placeholder='Telefone'
+          placeholder='Telefone (ddd + num)'
           placeholderTextColor='gray'
           value={telefone}
           onChangeText={setTelefone}
           keyboardType='phone-pad'
         />
 
-        <TouchableOpacity style={styles.bott} onPress={handleEnviar}>
-          <Text style={styles.txt}>ENVIAR</Text>
+        <TouchableOpacity style={styles.button} onPress={handleEnviar}>
+          <Text style={styles.buttonText}>ENVIAR</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container3}></View>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
-  
-  
-  const styles = StyleSheet.create({
-    logo:{
-        width:300,
-        height:250,
-        alignSelf:'center',
-    },
-    container: {
-      flex: 1,
-      height:'100%',
-      width:'100%',
-      backgroundColor:'#fff'
-      // Defina os estilos desejados para o container aqui
-    },
 
-    container1:{
-        backgroundColor:'#000',
-        width:'100%',
-        height:'7%',
-        top:-60,
+const styles = StyleSheet.create({
+  logo: {
+    width: 300,
+    height: 250,
+    alignSelf: 'center',
+  },
+  container: {
+    flex: 1,
+    height: '100%',
+    width: '100%',
+    backgroundColor: '#fff'
+  },
+  container1: {
+    backgroundColor: '#7b7b7b',
+    width: '100%',
+    height: '10%',
+  },
+  container2: {
+    width: '100%',
+    height: '80%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  container3: {
+    backgroundColor: '#7b7b7b',
+    width: '100%',
+    height: '10%',
+  },
+  input: {
+    marginTop: 20,
+    alignSelf: 'center',
+    width: '80%',
+    height: '8%',
+    borderRadius: 10,
+    borderWidth: 1,
+    paddingLeft: 25,
+    paddingRight: 25,
+    fontSize: 20,
+    fontStyle: 'italic',
+  },
+  button: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#7b7b7b',
+    width: '50%',
+    height: 65,
+    borderRadius: 50,
+    marginTop: 40,
+  },
+  buttonText: {
+    color: '#FFF',
+  },
+});
 
-    },
-    container2:{
-        width:'100%',
-        height:'86%',
-
-
-    },
-    container3:{
-        backgroundColor:'#000',
-        width:'100%',
-        height:'7%',
-        bottom:-40,
-
-
-    },
-
-    input:{
-        marginTop:20,
-        alignSelf:'center',
-        width:'80%',
-        height:55,
-        borderRadius:10,
-        borderWidth:1,
-        paddingLeft:25,
-        paddingRight:25,
-        fontSize:20,
-        fontStyle:'italic',
-
-
-    },
-    bott:{
-        alignSelf:'center',
-        
-        alignItems:'center',
-        justifyContent:'center',
-        backgroundColor:'#000',
-        width:'10%',
-        height:65,
-        borderRadius:50,
-        marginTop:40,
-
-    },
-    txt:{
-        color:'#FFF',
-    },
-  
-  });
-  export default Cadastrar;
+export default Cadastrar;

@@ -1,12 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Linking } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { format } from 'date-fns';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import SendIntentAndroid from 'react-native-send-intent';
 
 function MarcarConsultas({ route, navigation }) {
   const { cliente } = route.params;
   const [dataConsulta, setDataConsulta] = useState('');
   const [horaConsulta, setHoraConsulta] = useState('');
   const [observacao, setObservacao] = useState('');
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleDateConfirm = (date) => {
+    setDataConsulta(format(date, 'dd/MM/yyyy'));
+    hideDatePicker();
+  };
+
+  const showTimePicker = () => {
+    setTimePickerVisibility(true);
+  };
+
+  const hideTimePicker = () => {
+    setTimePickerVisibility(false);
+  };
+
+  const handleTimeConfirm = (time) => {
+    setHoraConsulta(format(time, 'HH:mm'));
+    hideTimePicker();
+  };
 
   const handleSalvarConsulta = async () => {
     try {
@@ -38,11 +69,14 @@ function MarcarConsultas({ route, navigation }) {
       setDataConsulta('');
       setHoraConsulta('');
       setObservacao('');
-      console.log('Dados da consulta:');
-      console.log('Cliente:', cliente);
-      console.log('Data da Consulta:', dataConsulta);
-      console.log('Hora da Consulta:', horaConsulta);
-      console.log('Observação:', observacao);
+
+      // Envia uma mensagem para o WhatsApp do cliente
+      const mensagem = `Olá, ${cliente.nome}! Sua consulta foi marcada para o dia ${dataConsulta} às ${horaConsulta}, ${observacao}.`;
+      const numeroWhatsApp = '55' + cliente.telefone; // Supondo que o objeto cliente tenha uma propriedade "telefone"
+      const url = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensagem)}`;
+      
+      // Abre o WhatsApp com a mensagem pré-preenchida
+      Linking.openURL(url);
 
       // Redireciona para a página ClienteProfile, passando o objeto cliente como parâmetro
       navigation.navigate('ClienteProfile', { cliente: cliente });
@@ -54,7 +88,7 @@ function MarcarConsultas({ route, navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.laudoContainer}>
-        <Text style={styles.laudoTitle}>Laudo do Cliente</Text>
+        <Text style={styles.laudoTitle}>Marcar Consulta</Text>
         <Text style={styles.laudoText}>Nome: {cliente.nome}</Text>
         <Text style={styles.laudoText}>CPF: {cliente.cpf}</Text>
         <Text style={styles.laudoText}>Data de Nascimento: {cliente.dataNascimento}</Text>
@@ -63,19 +97,27 @@ function MarcarConsultas({ route, navigation }) {
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.formContainer}>
           <Text style={styles.label}>Data da Consulta:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Digite a data da consulta"
-            value={dataConsulta}
-            onChangeText={setDataConsulta}
+          <TouchableOpacity style={styles.dateButton} onPress={showDatePicker}>
+            <Text style={styles.dateButtonText}>{dataConsulta || 'Selecionar Data'}</Text>
+          </TouchableOpacity>
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleDateConfirm}
+            onCancel={hideDatePicker}
           />
+
           <Text style={styles.label}>Hora da Consulta:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Digite a hora da consulta"
-            value={horaConsulta}
-            onChangeText={setHoraConsulta}
+          <TouchableOpacity style={styles.timeButton} onPress={showTimePicker}>
+            <Text style={styles.timeButtonText}>{horaConsulta || 'Selecionar Hora'}</Text>
+          </TouchableOpacity>
+          <DateTimePickerModal
+            isVisible={isTimePickerVisible}
+            mode="time"
+            onConfirm={handleTimeConfirm}
+            onCancel={hideTimePicker}
           />
+
           <Text style={styles.label}>Observação:</Text>
           <TextInput
             style={styles.input}
@@ -85,17 +127,19 @@ function MarcarConsultas({ route, navigation }) {
             multiline
           />
           <TouchableOpacity style={styles.button} onPress={handleSalvarConsulta}>
-            <Text style={styles.buttonText}>Salvar</Text>
+            <Text style={styles.buttonText}>Salvar e Enviar</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingTop: '15%',
   },
   laudoContainer: {
     paddingHorizontal: 20,
@@ -123,16 +167,41 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
   },
-  input: {
+  dateButton: {
     height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 10,
+    justifyContent: 'center',
+  },
+  dateButtonText: {
+    fontSize: 16,
+  },
+  timeButton: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    justifyContent: 'center',
+  },
+  timeButtonText: {
+    fontSize: 16,
+  },
+  input: {
+    height: 80,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    textAlignVertical: 'top',
   },
   button: {
-    backgroundColor: '#000',
+    backgroundColor: '#7b7b7b',
     alignItems: 'center',
     justifyContent: 'center',
     height: 40,

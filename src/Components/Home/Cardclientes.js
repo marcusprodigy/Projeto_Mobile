@@ -1,7 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-function Cardclientes({ Nome, CPF, Date, clienteAberto }) {
+function Cardclientes({ Nome, CPF, Date, clienteAberto, onDelete }) {
+
+  const handleExcluir = () => {
+    onDelete(CPF);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.infoContainer}>
@@ -21,6 +26,9 @@ function Cardclientes({ Nome, CPF, Date, clienteAberto }) {
           <Text style={styles.label}>Cliente Aberto</Text>
         </View>
       )}
+      <TouchableOpacity style={styles.deleteButton} onPress={handleExcluir}>
+        <Text style={styles.deleteButtonText}>Excluir</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -37,6 +45,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2,
     elevation: 2,
+  },
+  deleteButton: {
+    backgroundColor: '#ff4d4d',
+    padding: 8,
+    borderRadius: 5,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
   infoContainer: {
     marginBottom: 8,

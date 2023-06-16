@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function MinhasConsultas() {
@@ -21,7 +22,33 @@ function MinhasConsultas() {
       console.log('Erro ao carregar consultas:', error);
     }
   };
-
+  const handleExcluirConsulta = async (consultaId) => {
+    try {
+      // Carrega as consultas salvas do AsyncStorage
+      const consultasSalvas = await AsyncStorage.getItem('Consultas');
+      if (consultasSalvas !== null) {
+        const consultasParseadas = JSON.parse(consultasSalvas);
+  
+        // Encontra o índice da consulta com o id correspondente
+        const consultaIndex = consultasParseadas.findIndex(consulta => consulta.id === consultaId);
+  
+        if (consultaIndex !== -1) {
+          // Remove a consulta do array de consultas
+          consultasParseadas.splice(consultaIndex, 1);
+  
+          // Salva as consultas atualizadas no AsyncStorage
+          await AsyncStorage.setItem('Consultas', JSON.stringify(consultasParseadas));
+  
+          // Atualiza o estado das consultas
+          setConsultas(consultasParseadas);
+        }
+      }
+    } catch (error) {
+      console.log('Erro ao excluir consulta:', error);
+    }
+  };
+  
+  
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <View style={styles.clienteContainer}>
@@ -40,6 +67,9 @@ function MinhasConsultas() {
         <Text style={styles.label}>Data da Consulta:</Text>
         <Text>{item.dataConsulta}</Text>
       </View>
+      <TouchableOpacity style={styles.deleteButton} onPress={() => handleExcluirConsulta(item.id)}>
+        <Text style={styles.deleteButtonText}>Apagar Consulta</Text>
+      </TouchableOpacity>
     </View>
   );
 
@@ -67,6 +97,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center', // Centraliza verticalmente o conteúdo
     width:'100%',
   },
+  deleteButton: {
+    backgroundColor: '#ff4d4d',
+    padding: 8,
+    borderRadius: 5,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  
   title: {
     fontSize: 20,
     fontWeight: 'bold',

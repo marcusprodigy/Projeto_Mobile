@@ -31,16 +31,18 @@ return (
 
 function MyStack() {
   return (
+  
     <Stack.Navigator>
-      {/* <Stack.Screen 
-        name="Login" 
-          component={Login} 
-            options={{ headerShown: false }}/> */}
-
-      <Stack.Screen 
-              name="Home" 
-                component={Home} 
-                  options={{ headerShown: false }}/>
+    <Stack.Screen 
+      name="Login" 
+        component={Login} 
+          options={{ headerShown: false }}/>
+          
+    <Stack.Screen
+      name="Home"
+      component={Home}
+          options={{ headerShown: false, 
+            gestureEnabled: false, }}/>
 
       <Stack.Screen 
               name="Cadastrar" 
@@ -58,12 +60,12 @@ function MyStack() {
                   options={{ headerShown: false }}/>
 
 
-<Stack.Screen 
+      <Stack.Screen 
               name="MarcarConsultas" 
                 component={MarcarConsultas} 
                   options={{ headerShown: false }}/>  
 
-<Stack.Screen 
+      <Stack.Screen 
               name="MinhasConsultas" 
                 component={MinhasConsultas} 
                   options={{ headerShown: false }}/>  

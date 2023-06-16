@@ -6,7 +6,7 @@ function Login({ navigation }) {
   const [senha, setSenha] = useState('');
 
   const handleLogin = () => {
-    if (cpf === 'SUDOuser' && senha === 'User123') {
+    if (cpf === 'admin' && senha === '123') {
       navigation.navigate('Home');
     } else {
       alert('Credenciais inválidas');
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   container1: {
-    backgroundColor: '#000',
+    backgroundColor: '#7b7b7b',
     width: '100%',
     height: '7%',
   },
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     height: '86%',
   },
   container3: {
-    backgroundColor: '#000',
+    backgroundColor: '#7b7b7b',
     width: '100%',
     height: '7%',
   },
@@ -84,11 +84,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#7b7b7b',
     width: '40%',
     height: 65,
     borderRadius: 50,
-    marginTop: 100,
+    marginTop: '15%',
   },
   txt: {
     color: '#FFF',

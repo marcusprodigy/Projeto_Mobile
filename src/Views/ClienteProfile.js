@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MinhasConsultas from './MinhasConsultas';
+import MinhasConsultacliente from './MinhasConsultacliente';
 
 function ClienteProfile({ route, navigation }) {
   const { cliente } = route.params;
@@ -28,10 +28,11 @@ function ClienteProfile({ route, navigation }) {
   const handleNavigateToPage = () => {
     navigation.navigate('MarcarConsultas', { cliente: cliente });
   };
-
+  console.log(cliente)
+  
+  console.log(consultasMarcadas)
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.clienteInfoContainer}>
           {Object.entries(cliente).map(([key, value]) => (
             <View style={styles.clienteInfoRow} key={key}>
@@ -44,12 +45,12 @@ function ClienteProfile({ route, navigation }) {
             </View>
           ))}
         </View>
+        
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.consultasContainer}>
-          <Text style={styles.consultasTitle}>Consultas Marcadas:</Text>
-          {consultasMarcadas.length > 0 ? (
-            <MinhasConsultas
-              consultas={consultasMarcadas.filter(item => consulta.clienteCPF === item.cpf)}
-            />
+           {consultasMarcadas.length > 0 ? (
+            <MinhasConsultacliente consultas={consultasMarcadas} clienteCPF={cliente.cpf} />
+
           
           ) : (
             <Text style={styles.noConsultasText}>Nenhuma consulta marcada.</Text>
@@ -65,23 +66,27 @@ function ClienteProfile({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 24,
+    paddingTop: '15%',
     flex: 1,
     backgroundColor: '#fff',
   },
   consultasContainer: {
     flexGrow: 1,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: '11%',
+    width:'100%',
   },
   scrollContainer: {
-    paddingTop: 15,
+    paddingTop: 25,
     flexGrow: 1,
     alignItems: 'center',
     paddingTop: 20,
+    height:80,
   },
-  clienteInfoContainer: {
-    width: '80%',
+  clienteInfoContainer: { //cont1
+    width: '90%',
+    height:'42%',
+    alignSelf:'center',
   },
   clienteInfoRow: {
     flexDirection: 'row',
@@ -102,10 +107,10 @@ const styles = StyleSheet.create({
     color: '#555',
   },
   footerButton: {
-    backgroundColor: '#000',
+    backgroundColor: '#7b7b7b',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 50,
+    height: '10%',
   },
   footerButtonText: {
     color: '#FFF',

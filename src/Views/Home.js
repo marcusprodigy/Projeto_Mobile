@@ -46,7 +46,7 @@ function Home({ navigation }) {
     },
 
     container1:{
-        backgroundColor:'#000',
+        backgroundColor:'#7b7b7b',
         width:'100%',
         height:'7%',
 
@@ -59,7 +59,7 @@ function Home({ navigation }) {
 
     },
     container3:{
-        backgroundColor:'#000',
+        backgroundColor:'#7b7b7b',
         width:'100%',
         height:'7%',
 
